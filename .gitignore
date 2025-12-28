@@ -1,207 +1,90 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[codz]
-*$py.class
+import pygame
+import time
+from random import *
 
-# C extensions
-*.so
+pygame.init()
+back = (148,255,244)
+window = pygame.display.set_mode((500,500))
+window.fill(back)
+clock = pygame.time.Clock()
 
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+class Area():
+    def __init__(self, x = 0, y = 0, width = 10, height = 10, color = None):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.fill_color = color
+    def color(self, new_color):
+        self.fill_color = new_color
+    def fill(self):
+        pygame.draw.rect(window, self.fill_color, self.rect)
+    def outline(self, frame_color, thikness):
+        pygame.draw.rect(window, frame_color, self.rect, thikness)
+    def collidepoint(self, x ,y):
+        return self.rect.collidepoint(x, y)
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+class Label(Area):
+    def set_text(self, text, fsize = 12, text_color = (0,0,0)):
+        self.image = pygame.font.SysFont('verdana', fsize).render(text, True, text_color)
+    def draw(self, x, y, shift_x = 0, shift_y = 0):
+        self.fill()
+        window.blit(self.image, (x+shift_x ,y+shift_y))
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py.cover
-.hypothesis/
-.pytest_cache/
-cover/
+DARK_BLUE = (0, 0, 100)
+YELLOW = (255, 255, 0)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+points = 0
+cards = []
+num_cards = 4
+x = 70
+y = 200
+wait = 0
+for i in range(num_cards):
+    new_card = Label(x, 170, 70, 100, YELLOW)
+    new_card.fill()
+    new_card.outline(DARK_BLUE, 10)
+    new_card.set_text("CLICK", 20)
+    new_card.draw(x, 170, 15, 40)
+    cards.append(new_card)
+    x += 100
 
-# Translations
-*.mo
-*.pot
+score_label = Label(340,0, 50,50, back)
+score_label.set_text('Счёт:', 45, DARK_BLUE)
+score_label.draw(score_label.rect.x, score_label.rect.y, 20, 20)
 
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-.pybuilder/
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
-
-# pyenv
-#   For a library or package, you might want to ignore these files since the code is
-#   intended to run in multiple environments; otherwise, check them in:
-# .python-version
-
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-#Pipfile.lock
-
-# UV
-#   Similar to Pipfile.lock, it is generally recommended to include uv.lock in version control.
-#   This is especially recommended for binary packages to ensure reproducibility, and is more
-#   commonly ignored for libraries.
-#uv.lock
-
-# poetry
-#   Similar to Pipfile.lock, it is generally recommended to include poetry.lock in version control.
-#   This is especially recommended for binary packages to ensure reproducibility, and is more
-#   commonly ignored for libraries.
-#   https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
-#poetry.lock
-#poetry.toml
-
-# pdm
-#   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
-#   pdm recommends including project-wide configuration in pdm.toml, but excluding .pdm-python.
-#   https://pdm-project.org/en/latest/usage/project/#working-with-version-control
-#pdm.lock
-#pdm.toml
-.pdm-python
-.pdm-build/
-
-# pixi
-#   Similar to Pipfile.lock, it is generally recommended to include pixi.lock in version control.
-#pixi.lock
-#   Pixi creates a virtual environment in the .pixi directory, just like venv module creates one
-#   in the .venv directory. It is recommended not to include this directory in version control.
-.pixi
-
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
-__pypackages__/
-
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.envrc
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
-
-# pytype static type analyzer
-.pytype/
-
-# Cython debug symbols
-cython_debug/
-
-# PyCharm
-#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
-#  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
-#  and can be added to the global gitignore or merged into this file.  For a more nuclear
-#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
-#.idea/
-
-# Abstra
-# Abstra is an AI-powered process automation framework.
-# Ignore directories containing user credentials, local state, and settings.
-# Learn more at https://abstra.io/docs
-.abstra/
-
-# Visual Studio Code
-#  Visual Studio Code specific template is maintained in a separate VisualStudioCode.gitignore 
-#  that can be found at https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
-#  and can be added to the global gitignore or merged into this file. However, if you prefer, 
-#  you could uncomment the following to ignore the entire vscode folder
-# .vscode/
-
-# Ruff stuff:
-.ruff_cache/
-
-# PyPI configuration file
-.pypirc
-
-# Cursor
-#  Cursor is an AI-powered code editor. `.cursorignore` specifies files/directories to
-#  exclude from AI features like autocomplete and code analysis. Recommended for sensitive data
-#  refer to https://docs.cursor.com/context/ignore-files
-.cursorignore
-.cursorindexingignore
-
-# Marimo
-marimo/_static/
-marimo/_lsp/
-__marimo__/
+score = Label(440, 0, 50,40, back)
+score.set_text('0', 45, DARK_BLUE)
+score.draw(score.rect.x, score.rect.y, 20, 20)
+while True:
+    clock.tick(20)
+    pygame.display.update()
+    if wait == 0:
+        wait = 10
+        click = randint(1, num_cards)
+        for i in range(num_cards):
+            cards[i].color(YELLOW)
+            if (i+1) == click:
+                cards[i].draw(cards[i].rect.x, cards[i].rect.y, 15, 40)
+            else:
+                cards[i].fill()
+    else:
+        wait -= 1
+    
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            x, y = event.pos
+            for i in range(num_cards):
+                if cards[i].collidepoint(x, y):
+                    if (i+1) == click:
+                        cards[i].color(GREEN)
+                        points += 1
+                    else:
+                        cards[i].color(RED)
+                        points -= 1
+                    cards[i].fill()
+                    score.color(back)
+                    score.fill()
+                    if points < 0:
+                        points = 0
+                    score.set_text(str(points), 50, DARK_BLUE)
+                    score.draw(score.rect.x, score.rect.y, 20, 15)
